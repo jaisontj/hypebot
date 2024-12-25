@@ -1,0 +1,36 @@
+---
+version: "2.0"
+
+services:
+  web:
+    image: ghcr.io/jaisontj/hypebot:v0.1.0
+    expose:
+      - port: 3000
+        as: 3000
+        to:
+          - global: true
+    env:
+      - RUST_LOG=info
+
+profiles:
+  compute:
+    web:
+      resources:
+        cpu:
+          units: 0.5
+        memory:
+          size: 512Mi
+        storage:
+          size: 512Mi
+  placement:
+    akash:
+      pricing:
+        web:
+          denom: uakt
+          amount: 1000
+
+deployment:
+  web:
+    akash:
+      profile: web
+      count: 1 

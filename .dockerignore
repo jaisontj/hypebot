@@ -1,0 +1,26 @@
+# Git
+.git
+.gitignore
+
+# Rust
+target/
+**/*.rs.bk
+Cargo.lock
+
+# Environment
+.env
+*.pem
+*.key
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Akash
+deploy.yml
+
+# GitHub
+.github/ 
