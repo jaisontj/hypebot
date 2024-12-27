@@ -1,205 +1,83 @@
 # Agent Instructions for HypeBot Development
 
 ## Project Overview
-
-HypeBot is a high-performance trading bot designed to interact with cryptocurrency exchanges. The project emphasizes:
-- Docker-first development approach
-- High-performance Rust implementation
-- Clean, maintainable code structure
-- Proper error handling and logging
-- Health monitoring capabilities
+HypeBot is a Rust-based trading application designed to provide a clean interface for monitoring and executing trades across various cryptocurrency exchanges. The project follows a Docker-first approach with automated deployments to the Akash Network.
 
 ## Technical Stack
+- **Language**: Rust
+- **Framework**: Axum for web services
+- **Container**: Docker
+- **Registry**: GitHub Container Registry (ghcr.io)
+- **Deployment**: Akash Network
+- **CI/CD**: GitHub Actions
 
-### Core Technologies
-- Rust (latest stable)
-- Docker for containerization
-- Axum web framework for API endpoints
-- Tokio for async runtime
-- Tower for middleware
-- Tracing for logging
-
-### Current Implementation
-- Basic HTTP server using Axum
-- Health check endpoint with JSON response
-- Structured logging with tracing
-- Docker multi-stage build
-- Port 3000 exposed for API access
-
-### Development Workflow
-
-1. **Code Changes**
-   - Make focused, single-purpose changes
-   - Implement proper error handling
-   - Include logging/tracing
-   - Follow Rust best practices
-   - Test changes in Docker before committing
-
-2. **Testing Process**
-   - Build the Docker image
-   - Run and verify functionality
-   - Test error cases
-   - Only after successful testing, commit changes
-   - Include both happy path and error path testing
-
-3. **Commit Process**
-   - Write clear, descriptive commit messages
-   - Include the type of change (feat/fix/docs/etc.)
-   - Reference any relevant issues/tickets
-   - Ensure all tests pass before committing
+## Development Workflow
+1. All development should be done in feature branches
+2. Changes are containerized using Docker
+3. Automated builds trigger on:
+   - Push to main branch
+   - Version tags (v*.*.*)
+4. Deployments to Akash happen automatically on version tags
 
 ## Implementation Order
-
-1. **Project Setup** (Completed)
-   - Initialize basic Rust project ✓
-   - Set up Docker configuration ✓
-   - Configure basic dependencies ✓
-   - Create minimal README ✓
-
-2. **Core Infrastructure** (In Progress)
-   - Implement basic HTTP server ✓
-   - Add health check endpoint ✓
-   - Set up logging/tracing ✓
-   - Configure proper error handling (Pending)
-
-3. **Future Extensions** (Planned)
-   - Exchange integrations
-   - Trading strategies
-   - Portfolio management
-   - Alert system
+1. Core application structure
+2. Docker containerization
+3. GitHub Actions setup
+4. Akash deployment configuration
+5. Feature implementation
 
 ## Code Organization
-
 ```
 .
-├── src/
-│   ├── main.rs              # Application entry point
-│   ├── routes/              # API endpoints (planned)
-│   ├── services/            # Business logic (planned)
-│   ├── models/              # Data structures (planned)
-│   └── utils/              # Helper functions (planned)
-├── Dockerfile              # Multi-stage build
-├── Cargo.toml             # Dependencies
-└── README.md             # Project documentation
+├── src/              # Application source code
+├── devops/           # DevOps and deployment configurations
+│   └── akash/        # Akash-specific configurations
+├── .github/          # GitHub Actions workflows
+└── Dockerfile        # Main application Dockerfile
 ```
 
 ## Development Guidelines
-
-### Docker Usage
-- Always develop and test within Docker
-- Use multi-stage builds for minimal image size
-- Expose port 3000 for API access
-- Set RUST_LOG environment variable for logging
-- Use debian:bookworm-slim as the runtime base
-
-### API Design
-- RESTful endpoints
-- JSON responses
-- Proper status codes (200 for success, 4xx/5xx for errors)
-- Comprehensive error messages
-- Health check endpoint at /health
-
-### Error Handling
-- Use proper Rust error handling (Result/Option)
-- Provide meaningful error messages
-- Include appropriate status codes
-- Log errors with context
-- Avoid unwrap() in production code
-
-### Logging
-- Use tracing for structured logging
-- Include request/response logging via Tower middleware
-- Log appropriate level (debug/info/error)
-- Include relevant context in logs
-- Set log level via RUST_LOG environment variable
+1. Always use Docker for development and testing
+2. Follow Rust best practices and idioms
+3. Implement proper error handling
+4. Add appropriate logging
+5. Keep the codebase modular and maintainable
 
 ## Interaction Guidelines
-
-### With User
-- Confirm understanding of requirements
-- Build and test before committing
-- Provide clear explanations of changes
-- Ask for clarification when needed
-- Show test results and logs
-
-### Response Format
-- Explain planned changes
-- Show code modifications
-- Demonstrate build/test results
-- Request feedback when appropriate
-- Include relevant logs or error messages
+1. Use clear commit messages following conventional commits
+2. Document all major changes
+3. Update README.md when adding new features
+4. Tag versions appropriately for deployment
 
 ## Common Pitfalls to Avoid
-
-1. **Development Process**
-   - Don't commit before testing in Docker
-   - Don't skip error handling
-   - Don't ignore logging
-   - Don't make multiple unrelated changes
-   - Don't hardcode configuration values
-
-2. **Technical Implementation**
-   - Don't use unwrap() in production code
-   - Don't ignore compiler warnings
-   - Don't skip proper error types
-   - Don't hardcode configuration
-   - Don't ignore Docker build optimization
+1. Don't hardcode configuration values
+2. Don't commit sensitive information
+3. Don't bypass Docker for development
+4. Don't skip error handling
+5. Don't ignore failed tests
 
 ## Testing Instructions
+1. Build and test locally using Docker
+2. Verify health endpoint functionality
+3. Check deployment configuration
+4. Test Akash deployment locally before pushing
 
-1. **Build Testing**
-   ```bash
-   docker build -t hypebot .
-   ```
-
-2. **Run Testing**
-   ```bash
-   docker run -p 3000:3000 hypebot
-   ```
-
-3. **API Testing**
-   ```bash
-   # Health Check
-   curl http://localhost:3000/health
-   
-   # Expected Response
-   {
-       "status": "healthy"
-   }
-   ```
-
-4. **Log Verification**
-   - Check for startup message: "listening on 0.0.0.0:3000"
-   - Verify request logging from TraceLayer
-   - Confirm proper log levels are used
+## Deployment Process
+1. GitHub Actions automates the build and push to ghcr.io
+2. Version tags trigger Akash deployment
+3. Secrets are managed through GitHub Secrets
+4. Deployment status can be monitored through GitHub Actions
 
 ## Success Criteria
-
-- Docker builds successfully
-- Server starts without errors
-- Health endpoint returns correct response
-- Proper logging is visible
-- Error cases are handled gracefully
-- No unwrap() calls in production code
-- All compiler warnings are addressed
+1. Application builds successfully in Docker
+2. All tests pass
+3. GitHub Actions workflow completes
+4. Akash deployment succeeds
+5. Health endpoint responds correctly
 
 ## Next Steps
-
-After basic setup:
-1. Add more comprehensive health checks
-   - System resources
-   - Database connectivity (when added)
-   - External service status
-2. Implement exchange integrations
-   - Define exchange trait
-   - Implement for specific exchanges
-3. Add trading strategy framework
-   - Strategy trait
-   - Basic strategy implementations
-4. Implement portfolio tracking
-   - Position tracking
-   - Balance monitoring
-5. Add monitoring and alerts
-   - Telegram integration
-   - Discord webhooks
-   - Email notifications 
+1. Implement exchange integrations
+2. Add monitoring and alerting
+3. Enhance deployment configuration
+4. Implement user authentication
+5. Add trading strategies 
