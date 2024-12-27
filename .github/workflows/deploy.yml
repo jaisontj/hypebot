@@ -67,12 +67,12 @@ jobs:
 
       - name: Setup Akash Configuration
         env:
-          AKASH_KEY: ${{ secrets.AKASH_KEY }}
+          AKASH_PRIVATE_KEY: ${{ secrets.AKASH_PRIVATE_KEY }}
           AKASH_KEYRING_BACKEND: test
           AKASH_CHAIN_ID: akashnet-2
           AKASH_NODE: https://rpc.akash.forbole.com:443
         run: |
-          echo "$AKASH_KEY" > key.pem
+          echo "$AKASH_PRIVATE_KEY" > key.pem
           akash keys import deployer key.pem
           rm key.pem
 
